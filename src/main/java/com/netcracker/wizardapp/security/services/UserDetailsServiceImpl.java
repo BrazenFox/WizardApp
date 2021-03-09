@@ -1,4 +1,4 @@
-package com.netcracker.wizardapp.security;
+package com.netcracker.wizardapp.security.services;
 
 import com.netcracker.wizardapp.domain.User;
 import com.netcracker.wizardapp.repository.UserRepo;

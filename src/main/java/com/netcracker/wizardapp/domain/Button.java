@@ -49,5 +49,11 @@ public class Button {
         this.page = page;
     }
 
-
+    @Override
+    public String toString() {
+        return "Button{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

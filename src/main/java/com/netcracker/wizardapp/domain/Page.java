@@ -66,5 +66,13 @@ public class Page {
     public void addButton(Button button){
         this.buttons.add(button);
     }
-    
+
+    @Override
+    public String toString() {
+        return "Page{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", buttons=" + buttons +
+                '}';
+    }
 }

@@ -51,4 +51,13 @@ public class Wizard {
     public void addPage(Page page){
         this.pages.add(page);
     }
+
+    @Override
+    public String toString() {
+        return "Wizard{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", pages=" + pages +
+                '}';
+    }
 }
