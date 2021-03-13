@@ -2,10 +2,10 @@ package com.netcracker.wizardapp.payload.request;
 
 import java.util.Set;
 
-public class SignupRequest {
+public class RegistrationRequest {
     private String username;
-    private Set<String> role;
     private String password;
+    private Set<String> role;
   
     public String getUsername() {
         return username;

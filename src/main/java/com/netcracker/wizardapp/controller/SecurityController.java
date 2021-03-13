@@ -4,7 +4,7 @@ import com.netcracker.wizardapp.domain.Role;
 import com.netcracker.wizardapp.domain.Roles;
 import com.netcracker.wizardapp.domain.User;
 import com.netcracker.wizardapp.payload.request.LoginRequest;
-import com.netcracker.wizardapp.payload.request.SignupRequest;
+import com.netcracker.wizardapp.payload.request.RegistrationRequest;
 import com.netcracker.wizardapp.payload.response.JwtResponse;
 import com.netcracker.wizardapp.payload.response.MessageResponse;
 import com.netcracker.wizardapp.repository.RoleRepo;
@@ -51,7 +51,7 @@ public class SecurityController {
     @Autowired
     JwtUtils jwtUtils;
 
-    @PostMapping("/signin")
+    @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
         Authentication authentication = authenticationManager.authenticate(
@@ -73,18 +73,13 @@ public class SecurityController {
                 roles));
     }
 
-    @GetMapping("/info")
-    public void info(){
-        System.out.println(SecurityContextHolder.getContext());
-    }
-
     @PostMapping("/logout")
     public void logout(){
         SecurityContextHolder.clearContext();
     }
 
-    @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
+    @PostMapping("/registration")
+    public ResponseEntity<?> registerUser(@RequestBody RegistrationRequest signUpRequest) {
         if (userRepo.existsByUsername(signUpRequest.getUsername())) {
             return ResponseEntity
                     .badRequest()

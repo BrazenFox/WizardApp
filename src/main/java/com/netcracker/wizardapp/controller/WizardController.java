@@ -10,6 +10,7 @@ import com.netcracker.wizardapp.repository.WizardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/wizard")
 public class WizardController {
@@ -21,7 +22,7 @@ public class WizardController {
     private ButtonRepo buttonRepo;
 
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public Wizard addWizard(@RequestBody Wizard wizardView) {
         if (wizardRepo.findByName(wizardView.getName()) == null) {
             Wizard wizard = new Wizard(wizardView.getName());

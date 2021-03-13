@@ -39,9 +39,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/test/mod").hasAuthority(Roles.MODERATOR.name())
                 .antMatchers("/wizard/**").authenticated()
                 .and().httpBasic();
-                *//*.formLogin()
-                .and()
-                .logout();*//*
+
     }*/
 
 
@@ -62,10 +60,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/auth/**").permitAll()
-                .antMatchers("/test/all").permitAll()
-                .antMatchers("/test/admin").hasAuthority("ADMIN")
-                .antMatchers("/test/user").hasAnyAuthority("USER", "ADMIN")
-                .antMatchers("/test/mod").hasAnyAuthority("MODERATOR", "ADMIN")
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                //.antMatchers("/user/find").hasAuthority("ADMIN")
+                .antMatchers("/user/find").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
