@@ -5,7 +5,7 @@ import java.util.Set;
 public class RegistrationRequest {
     private String username;
     private String password;
-    private Set<String> role;
+    private Set<String> roles;
   
     public String getUsername() {
         return username;
@@ -23,11 +23,11 @@ public class RegistrationRequest {
         this.password = password;
     }
     
-    public Set<String> getRole() {
-      return this.role;
+    public Set<String> getRoles() {
+      return this.roles;
     }
     
-    public void setRole(Set<String> role) {
-      this.role = role;
+    public void setRoles(Set<String> roles) {
+      this.roles = roles;
     }
 }

@@ -3,11 +3,13 @@ package com.netcracker.wizardapp.controller;
 import com.netcracker.wizardapp.domain.Button;
 import com.netcracker.wizardapp.domain.Page;
 import com.netcracker.wizardapp.domain.Wizard;
-import com.netcracker.wizardapp.exceptions.NotFoundException;
+import com.netcracker.wizardapp.exceptions.ResourceNotFoundException;
+import com.netcracker.wizardapp.payload.response.MessageResponse;
 import com.netcracker.wizardapp.repository.ButtonRepo;
 import com.netcracker.wizardapp.repository.PageRepo;
 import com.netcracker.wizardapp.repository.WizardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -23,45 +25,53 @@ public class WizardController {
 
 
     @PostMapping("/create")
-    public Wizard addWizard(@RequestBody Wizard wizardView) {
-        if (wizardRepo.findByName(wizardView.getName()) == null) {
-            Wizard wizard = new Wizard(wizardView.getName());
-            wizardRepo.save(wizard);
-            if (!wizardView.getPages().isEmpty()) {
-                for (Page pageView : wizardView.getPages()) {
-                    if (pageRepo.findByNameAndWizard(pageView.getName(), wizard) == null) {
-                        Page page = new Page(pageView.getName(), wizard);
-                        pageRepo.save(page);
-                        if (!pageView.getButtons().isEmpty()) {
-                            for (Button buttonView : pageView.getButtons()) {
-                                if (buttonRepo.findByNameAndPage(buttonView.getName(), page) == null) {
-                                    Button button = new Button(buttonView.getName(), page);
-                                    buttonRepo.save(button);
-                                }
-                            }
+    public ResponseEntity<?> addWizard(@RequestBody Wizard wizardView) {
+        if (wizardRepo.existsByName(wizardView.getName())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Wizards name is already taken!"));
+        }
+
+        Wizard wizard = new Wizard(wizardView.getName());
+        wizardRepo.save(wizard);
+        if (!wizardView.getPages().isEmpty()) {
+            for (Page pageView : wizardView.getPages()) {
+                if (pageRepo.existsByNameAndWizard(pageView.getName(), wizard)) {
+                    return ResponseEntity
+                            .badRequest()
+                            .body(new MessageResponse("Error: Page name is already taken!"));
+                }
+                Page page = new Page(pageView.getName(), wizard);
+                pageRepo.save(page);
+                if (!pageView.getButtons().isEmpty()) {
+                    for (Button buttonView : pageView.getButtons()) {
+                        if (buttonRepo.existsByNameAndPage(buttonView.getName(), page)) {
+                            return ResponseEntity
+                                    .badRequest()
+                                    .body(new MessageResponse("Error: Button name is already taken!"));
                         }
+                        Button button = new Button(buttonView.getName(), page);
+                        buttonRepo.save(button);
+
                     }
                 }
+
             }
-            return wizard;
         }
-        return wizardView;
+        return ResponseEntity.ok(wizardView);
     }
 
-    @DeleteMapping("/delete/{wizard}")
-    public Wizard deleteWaizard(@PathVariable(value = "wizard") String wizardName) {
-        Wizard wizard = wizardRepo.findByName(wizardName);
-        if (wizard == null) throw new NotFoundException();
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Wizard> deleteWaizard(@PathVariable(value = "id") Integer id) {
+        Wizard wizard = wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
         wizardRepo.delete(wizard);
-        return wizard;
+        return ResponseEntity.ok(wizard);
     }
 
 
-    @GetMapping("/find/{wizard}")
-    public Wizard findWizard(@PathVariable(value = "wizard") String wizardName) {
-        Wizard wizard = wizardRepo.findByName(wizardName);
-        if (wizard == null) throw new NotFoundException();
-        return wizard;
+    @GetMapping("/find/id}")
+    public Wizard findWizard(@PathVariable(value = "id") Integer id) {
+        return wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 
     @GetMapping("/find")

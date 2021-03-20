@@ -6,5 +6,5 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import java.util.function.Supplier;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND, reason="No such Wizard")
-public class NotFoundException extends RuntimeException{
+public class ResourceNotFoundException extends RuntimeException{
 }

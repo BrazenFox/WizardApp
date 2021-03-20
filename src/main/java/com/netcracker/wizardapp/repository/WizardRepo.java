@@ -4,9 +4,13 @@ import com.netcracker.wizardapp.domain.Wizard;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface WizardRepo extends JpaRepository<Wizard, Long> {
-    Wizard findByName(String wizard);
+    Optional<Wizard> findByName(String wizard);
+    Optional<Wizard> findById(Integer id);
+    Boolean existsByName(String name);
 
 
 }

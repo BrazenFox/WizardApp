@@ -6,9 +6,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ButtonRepo extends JpaRepository<Button, Long> {
-    Button findByNameAndPage(String button, Page page);
+    Optional<Button> findById(Integer id);
+    Boolean existsByNameAndPage(String button, Page page);
     List<Button> findByPage(Page page);
 }

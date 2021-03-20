@@ -6,9 +6,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface PageRepo extends JpaRepository<Page, Long> {
-    Page findByNameAndWizard(String page, Wizard wizard);
+    Optional<Page> findById(Integer id);
+    Boolean existsByNameAndWizard(String page, Wizard wizard);
     List<Page> findByWizard(Wizard wizard);
 
 

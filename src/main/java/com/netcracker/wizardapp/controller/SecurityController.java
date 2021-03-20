@@ -90,23 +90,23 @@ public class SecurityController {
         User user = new User(signUpRequest.getUsername(),
                 encoder.encode(signUpRequest.getPassword()));
 
-        Set<String> strRoles = signUpRequest.getRole();
+        Set<String> strRoles = signUpRequest.getRoles();
         Set<Role> roles = new HashSet<>();
-
-        if (strRoles == null) {
+        System.out.println(strRoles);
+        if (strRoles == null || strRoles.isEmpty()) {
             Role userRole = roleRepo.findByName(Roles.USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
-                    case "admin":
+                    case "ADMIN":
                         Role adminRole = roleRepo.findByName((Roles.ADMIN))
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
 
                         break;
-                    case "mod":
+                    case "MODERATOR":
                         Role modRole = roleRepo.findByName((Roles.MODERATOR))
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(modRole);
