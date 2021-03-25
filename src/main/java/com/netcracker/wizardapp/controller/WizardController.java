@@ -26,6 +26,7 @@ public class WizardController {
 
     @PostMapping("/create")
     public ResponseEntity<?> addWizard(@RequestBody Wizard wizardView) {
+        System.out.println(wizardView);
         if (wizardRepo.existsByName(wizardView.getName())) {
             return ResponseEntity
                     .badRequest()
