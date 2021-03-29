@@ -9,13 +9,20 @@ import javax.persistence.*;
 public class Button {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
 
     @ManyToOne
     @JoinColumn(name = "page_id", referencedColumnName = "id")
     @JsonBackReference
     private Page page;
+
+    ///////////////
+    /*@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "to_page_id", referencedColumnName = "id")
+    private Page toPage;*/
+    private Long toPage;
+    /////////////////
 
     public Button() {
     }
@@ -25,11 +32,17 @@ public class Button {
         this.page = page;
     }
 
-    public Integer getId() {
+    public Button(String name, Page page, Long toPage) {
+        this.name = name;
+        this.page = page;
+        this.toPage = toPage;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -49,11 +62,22 @@ public class Button {
         this.page = page;
     }
 
+    public Long getToPage() {
+        return toPage;
+    }
+
+    public void setToPage(Long toPage) {
+        this.toPage = toPage;
+    }
+
+
     @Override
     public String toString() {
         return "Button{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", page=" + page +
+                ", toPage=" + toPage +
                 '}';
     }
 }

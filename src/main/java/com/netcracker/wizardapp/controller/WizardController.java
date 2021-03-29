@@ -2,11 +2,13 @@ package com.netcracker.wizardapp.controller;
 
 import com.netcracker.wizardapp.domain.Button;
 import com.netcracker.wizardapp.domain.Page;
+import com.netcracker.wizardapp.domain.User;
 import com.netcracker.wizardapp.domain.Wizard;
 import com.netcracker.wizardapp.exceptions.ResourceNotFoundException;
 import com.netcracker.wizardapp.payload.response.MessageResponse;
 import com.netcracker.wizardapp.repository.ButtonRepo;
 import com.netcracker.wizardapp.repository.PageRepo;
+import com.netcracker.wizardapp.repository.UserRepo;
 import com.netcracker.wizardapp.repository.WizardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class WizardController {
     private PageRepo pageRepo;
     @Autowired
     private ButtonRepo buttonRepo;
+
+    @Autowired
+    private UserRepo userRepo;
 
 
     @PostMapping("/create")
@@ -62,8 +67,48 @@ public class WizardController {
         return ResponseEntity.ok(wizardView);
     }
 
+    @PostMapping("/create1")
+    public ResponseEntity<?> addWizard1(@RequestBody Wizard wizardView) {
+        System.out.println(wizardView);
+        if (wizardRepo.existsByName(wizardView.getName())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Wizards name is already taken!"));
+        }
+
+        User creator = userRepo.findById(wizardView.getCreator().getId()).orElseThrow(() -> new RuntimeException("User Not Found with id: " + wizardView.getCreator().getId()));
+        Wizard wizard = new Wizard(wizardView.getName(), creator);
+        wizardRepo.save(wizard);
+
+        if (!wizardView.getPages().isEmpty()) {
+            for (Page pageView : wizardView.getPages()) {
+                if (pageRepo.existsByNameAndWizard(pageView.getName(), wizard)) {
+                    return ResponseEntity
+                            .badRequest()
+                            .body(new MessageResponse("Error: Page name is already taken!"));
+                }
+                Page page = new Page(pageView.getName(), wizard, pageView.getNumber(), pageView.getContent());
+                pageRepo.save(page);
+                if (!pageView.getButtons().isEmpty()) {
+                    for (Button buttonView : pageView.getButtons()) {
+                        if (buttonRepo.existsByNameAndPage(buttonView.getName(), page)) {
+                            return ResponseEntity
+                                    .badRequest()
+                                    .body(new MessageResponse("Error: Button name is already taken!"));
+                        }
+                        Button button = new Button(buttonView.getName(), page, buttonView.getToPage());
+                        buttonRepo.save(button);
+
+                    }
+                }
+
+            }
+        }
+        return ResponseEntity.ok(wizardView);
+    }
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Wizard> deleteWaizard(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<Wizard> deleteWaizard(@PathVariable(value = "id") Long id) {
         Wizard wizard = wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
         wizardRepo.delete(wizard);
         return ResponseEntity.ok(wizard);
@@ -71,7 +116,7 @@ public class WizardController {
 
 
     @GetMapping("/find/id}")
-    public Wizard findWizard(@PathVariable(value = "id") Integer id) {
+    public Wizard findWizard(@PathVariable(value = "id") Long id) {
         return wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
     }
 

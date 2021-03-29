@@ -6,14 +6,21 @@ import javax.persistence.*;
 import java.util.List;
 
 @Entity
-@Table
+@Table(name = "wizard",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "name")
+        })
 public class Wizard {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
 
-    @OneToMany(mappedBy="wizard", cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User creator;
+
+    @OneToMany(mappedBy = "wizard", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Page> pages;
 
@@ -24,11 +31,16 @@ public class Wizard {
         this.name = name;
     }
 
-    public Integer getId() {
+    public Wizard(String name, User creator) {
+        this.creator = creator;
+        this.name = name;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -48,16 +60,15 @@ public class Wizard {
         this.pages = pages;
     }
 
-    public void addPage(Page page){
+    public void addPage(Page page) {
         this.pages.add(page);
     }
 
-    @Override
-    public String toString() {
-        return "Wizard{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", pages=" + pages +
-                '}';
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }

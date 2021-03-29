@@ -11,15 +11,19 @@ import java.util.List;
 public class Page {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
+
+    private Long number;
+
+    private String content;
 
     @ManyToOne
     @JoinColumn(name = "wizard_id", referencedColumnName = "id")
     @JsonBackReference
     private Wizard wizard;
 
-    @OneToMany(mappedBy="page", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Button> buttons;
 
@@ -31,11 +35,18 @@ public class Page {
         this.wizard = wizard;
     }
 
-    public Integer getId() {
+    public Page(String name, Wizard wizard, Long number, String content) {
+        this.name = name;
+        this.wizard = wizard;
+        this.content = content;
+        this.number = number;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,6 +56,22 @@ public class Page {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Long getNumber() {
+        return number;
+    }
+
+    public void setNumber(Long number) {
+        this.number = number;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public Wizard getWizard() {
@@ -63,15 +90,15 @@ public class Page {
         this.buttons = buttons;
     }
 
-    public void addButton(Button button){
-        this.buttons.add(button);
-    }
 
     @Override
     public String toString() {
         return "Page{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", number=" + number +
+                ", content='" + content + '\'' +
+                ", wizard=" + wizard +
                 ", buttons=" + buttons +
                 '}';
     }

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @Repository
 public interface ButtonRepo extends JpaRepository<Button, Long> {
-    Optional<Button> findById(Integer id);
+    Optional<Button> findById(Long id);
     Boolean existsByNameAndPage(String button, Page page);
     List<Button> findByPage(Page page);
 }
