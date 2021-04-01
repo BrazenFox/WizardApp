@@ -115,9 +115,9 @@ public class WizardController {
     }
 
 
-    @GetMapping("/find/id}")
-    public Wizard findWizard(@PathVariable(value = "id") Long id) {
-        return wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new);
+    @GetMapping("/find/{id}")
+    public ResponseEntity<Wizard> findWizard(@PathVariable(value = "id") Long id) {
+        return ResponseEntity.ok(wizardRepo.findById(id).orElseThrow(ResourceNotFoundException::new));
     }
 
     @GetMapping("/find")
