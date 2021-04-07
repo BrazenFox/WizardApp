@@ -2,6 +2,8 @@ package com.netcracker.wizardapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,19 +15,22 @@ public class Page {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
-
-    private Long number;
-
     private String content;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "wizard_id", referencedColumnName = "id")
     @JsonBackReference
     private Wizard wizard;
 
-    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "page", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Button> buttons;
+
+    /*@OneToMany(mappedBy = "toPage", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Button> linkButtons;*/
+
 
     public Page() {
     }
@@ -35,11 +40,10 @@ public class Page {
         this.wizard = wizard;
     }
 
-    public Page(String name, Wizard wizard, Long number, String content) {
+    public Page(String name, Wizard wizard, String content) {
         this.name = name;
         this.wizard = wizard;
         this.content = content;
-        this.number = number;
     }
 
     public Long getId() {
@@ -58,13 +62,6 @@ public class Page {
         this.name = name;
     }
 
-    public Long getNumber() {
-        return number;
-    }
-
-    public void setNumber(Long number) {
-        this.number = number;
-    }
 
     public String getContent() {
         return content;
@@ -90,13 +87,20 @@ public class Page {
         this.buttons = buttons;
     }
 
+    public void addButton(Button button) {
+        this.buttons.add(button);
+    }
+
+    public void removeButton(Button button) {
+        this.buttons.remove(button);
+    }
+
 
     @Override
     public String toString() {
         return "Page{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", number=" + number +
                 ", content='" + content + '\'' +
                 ", wizard=" + wizard +
                 ", buttons=" + buttons +

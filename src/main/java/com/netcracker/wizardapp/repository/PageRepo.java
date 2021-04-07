@@ -11,6 +11,7 @@ import java.util.Optional;
 @Repository
 public interface PageRepo extends JpaRepository<Page, Long> {
     Optional<Page> findById(Long id);
+    Optional<Page> findByNameAndWizard(String name, Wizard wizard);
     Boolean existsByNameAndWizard(String page, Wizard wizard);
     List<Page> findByWizard(Wizard wizard);
 

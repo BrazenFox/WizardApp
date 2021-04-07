@@ -1,11 +1,19 @@
 package com.netcracker.wizardapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.netcracker.wizardapp.service.ToPageSerializer;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
 @Entity
 @Table
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "toPage"})
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "toPage")
 public class Button {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -13,15 +21,18 @@ public class Button {
     private String name;
 
     @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "page_id", referencedColumnName = "id")
     @JsonBackReference
     private Page page;
 
-    ///////////////
-    /*@ManyToOne(fetch = FetchType.EAGER)
+    ///////////////@JsonIgnore
+    @JsonSerialize(using = ToPageSerializer.class)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "to_page_id", referencedColumnName = "id")
-    private Page toPage;*/
-    private Long toPage;
+    //@JsonBackReference
+    private Page toPage;
     /////////////////
 
     public Button() {
@@ -32,7 +43,7 @@ public class Button {
         this.page = page;
     }
 
-    public Button(String name, Page page, Long toPage) {
+    public Button(String name, Page page, Page toPage) {
         this.name = name;
         this.page = page;
         this.toPage = toPage;
@@ -62,11 +73,11 @@ public class Button {
         this.page = page;
     }
 
-    public Long getToPage() {
+    public Page getToPage() {
         return toPage;
     }
 
-    public void setToPage(Long toPage) {
+    public void setToPage(Page toPage) {
         this.toPage = toPage;
     }
 

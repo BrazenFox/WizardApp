@@ -1,6 +1,8 @@
 package com.netcracker.wizardapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,9 +20,10 @@ public class Wizard {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private User creator;
 
-    @OneToMany(mappedBy = "wizard", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "wizard", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<Page> pages;
 
@@ -64,11 +67,26 @@ public class Wizard {
         this.pages.add(page);
     }
 
+    public void removePage(Page page) {
+        this.pages.remove(page);
+    }
+
     public User getCreator() {
         return creator;
     }
 
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+
+
+    @Override
+    public String toString() {
+        return "Wizard{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", creator=" + creator +
+                ", pages=" + pages +
+                '}';
     }
 }
