@@ -18,9 +18,9 @@ public class Wizard {
     private Long id;
     private String name;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @ManyToOne//(fetch = FetchType.EAGER)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User creator;
 
     @OneToMany(mappedBy = "wizard", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -17,6 +17,10 @@ public class Page {
     private String name;
     private String content;
 
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private PageTypes type;
+
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "wizard_id", referencedColumnName = "id")
@@ -44,6 +48,13 @@ public class Page {
         this.name = name;
         this.wizard = wizard;
         this.content = content;
+    }
+
+    public Page(String name, Wizard wizard, String content, PageTypes type) {
+        this.name = name;
+        this.wizard = wizard;
+        this.content = content;
+        this.type=type;
     }
 
     public Long getId() {
@@ -95,6 +106,13 @@ public class Page {
         this.buttons.remove(button);
     }
 
+    public PageTypes getType() {
+        return type;
+    }
+
+    public void setType(PageTypes type) {
+        this.type = type;
+    }
 
     @Override
     public String toString() {
