@@ -2,6 +2,10 @@ package com.netcracker.wizardapp.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.netcracker.wizardapp.serializeservice.ToPageSerializer;
+import com.netcracker.wizardapp.serializeservice.UserSerializer;
+import com.netcracker.wizardapp.serializeservice.WizardSerializer;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -24,13 +28,13 @@ public class Result {
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "wizard_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonSerialize(using = WizardSerializer.class)
     private Wizard wizard;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonBackReference
+    @JsonSerialize(using = UserSerializer.class)
     private User user;
 
     @Type(type = "jsonb")

@@ -9,12 +9,13 @@ import com.netcracker.wizardapp.repository.UserRepo;
 import com.netcracker.wizardapp.repository.WizardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/result")
 public class ResultController {
@@ -26,11 +27,7 @@ public class ResultController {
     private UserRepo userRepo;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createResult(@RequestBody ResultRequest resultView){
-        System.out.println(resultView.getUser_id());
-        System.out.println(resultView.getWizard_id());
-        System.out.println(Arrays.toString(resultView.getNotes().toArray()));
-        System.out.println(resultView.getNotes().getClass());
+    public ResponseEntity<?> createResult(@RequestBody ResultRequest resultView) {
         Result result = new Result();
         User creator = userRepo.findById(resultView.getUser_id()).orElseThrow(() -> new RuntimeException("User Not Found with id: " + resultView.getUser_id()));
         Wizard wizard = wizardRepo.findById(resultView.getWizard_id()).orElseThrow(() -> new RuntimeException("Wizard Not Found with id: " + resultView.getWizard_id()));
@@ -38,10 +35,26 @@ public class ResultController {
         result.setWizard(wizard);
         result.setDate(LocalDateTime.now());
         result.setNote(resultView.getNotes());
-
         resultRepo.save(result);
         return ResponseEntity.ok().body(result);
 
+    }
+
+    @GetMapping("findall")
+    public Iterable<Result> findResultAll() {
+        return resultRepo.findAll();
+    }
+
+    @GetMapping("findformoder/{id}")
+    public Iterable<Result> findResultforModer(@PathVariable("id") Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
+        return resultRepo.findByCreator(user);
+    }
+
+    @GetMapping("findforUser/{id}")
+    public Iterable<Result> findResultForUser(@PathVariable("id") Long id) {
+        User user = userRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
+        return resultRepo.findAllByUser(user);
     }
 
 }

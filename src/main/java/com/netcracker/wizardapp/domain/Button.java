@@ -2,7 +2,7 @@ package com.netcracker.wizardapp.domain;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.netcracker.wizardapp.service.ToPageSerializer;
+import com.netcracker.wizardapp.serializeservice.ToPageSerializer;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 

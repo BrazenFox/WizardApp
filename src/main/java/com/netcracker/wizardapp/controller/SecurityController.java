@@ -32,7 +32,7 @@ public class SecurityController {
 
 }*/
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/auth")
 public class SecurityController {
