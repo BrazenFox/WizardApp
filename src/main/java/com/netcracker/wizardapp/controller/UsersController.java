@@ -3,10 +3,12 @@ package com.netcracker.wizardapp.controller;
 import com.netcracker.wizardapp.domain.Role;
 import com.netcracker.wizardapp.domain.Roles;
 import com.netcracker.wizardapp.domain.User;
+import com.netcracker.wizardapp.domain.Wizard;
 import com.netcracker.wizardapp.payload.request.RegistrationRequest;
 import com.netcracker.wizardapp.payload.response.MessageResponse;
 import com.netcracker.wizardapp.repository.RoleRepo;
 import com.netcracker.wizardapp.repository.UserRepo;
+import com.netcracker.wizardapp.repository.WizardRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,9 +16,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 public class UsersController {
@@ -28,6 +31,9 @@ public class UsersController {
 
     @Autowired
     private RoleRepo roleRepo;
+
+    @Autowired
+    private WizardRepo wizardRepo;
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody RegistrationRequest registrationRequest) {
@@ -94,6 +100,8 @@ public class UsersController {
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable(value = "id") Long id) {
         User user = userRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException("User Not Found with id: " + id));
+        List<Wizard> wizards = wizardRepo.findAllByCreator(user);
+        wizardRepo.deleteAll(wizards);
         userRepo.delete(user);
         return ResponseEntity.ok(user);
     }

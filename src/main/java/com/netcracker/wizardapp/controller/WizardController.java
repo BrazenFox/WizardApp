@@ -1,9 +1,6 @@
 package com.netcracker.wizardapp.controller;
 
-import com.netcracker.wizardapp.domain.Button;
-import com.netcracker.wizardapp.domain.Page;
-import com.netcracker.wizardapp.domain.User;
-import com.netcracker.wizardapp.domain.Wizard;
+import com.netcracker.wizardapp.domain.*;
 import com.netcracker.wizardapp.exceptions.ResourceNotFoundException;
 import com.netcracker.wizardapp.payload.response.MessageResponse;
 import com.netcracker.wizardapp.repository.ButtonRepo;
@@ -19,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/wizard")
 public class WizardController {
@@ -52,7 +49,11 @@ public class WizardController {
                             .badRequest()
                             .body(new MessageResponse("Error: Page name is already taken!"));
                 }
-                Page page = new Page(pageView.getName(), wizard, pageView.getContent());
+                System.out.println(pageView.getType());
+                System.out.println(pageView.getType().name());
+                //Page page = new Page(pageView.getName(), wizard, pageView.getContent());
+
+                Page page = new Page(pageView.getName(), wizard, pageView.getContent(), PageTypes.valueOf(pageView.getType().name()));
                 pageRepo.save(page);
 
             }
@@ -111,7 +112,7 @@ public class WizardController {
                             .badRequest()
                             .body(new MessageResponse("Error: Page name is already taken!"));
                 }
-                Page page = new Page(pageView.getName(), wizard, pageView.getContent());
+                Page page = new Page(pageView.getName(), wizard, pageView.getContent(), PageTypes.valueOf(pageView.getType().name()));
                 pageRepo.save(page);
                 System.out.println(page.getName());
 

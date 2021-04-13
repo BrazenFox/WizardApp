@@ -1,9 +1,13 @@
 package com.netcracker.wizardapp.payload.request;
 
+import com.netcracker.wizardapp.domain.Note;
+
+import java.util.List;
+
 public class ResultRequest {
     Long wizard_id;
     Long user_id;
-    String data;
+    List<Note> notes;
 
     public Long getWizard_id() {
         return wizard_id;
@@ -21,11 +25,12 @@ public class ResultRequest {
         this.user_id = user_id;
     }
 
-    public String getData() {
-        return data;
+    public List<Note> getNotes() {
+        return notes;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
+
 }

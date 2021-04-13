@@ -6,16 +6,21 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table
-public class Page {
+public class Page implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
     private String content;
+
+    @Enumerated(EnumType.STRING)
+    @Column(length = 20)
+    private PageTypes type;
 
     @ManyToOne
     @OnDelete(action = OnDeleteAction.CASCADE)
@@ -44,6 +49,13 @@ public class Page {
         this.name = name;
         this.wizard = wizard;
         this.content = content;
+    }
+
+    public Page(String name, Wizard wizard, String content, PageTypes type) {
+        this.name = name;
+        this.wizard = wizard;
+        this.content = content;
+        this.type = type;
     }
 
     public Long getId() {
@@ -95,6 +107,13 @@ public class Page {
         this.buttons.remove(button);
     }
 
+    public PageTypes getType() {
+        return type;
+    }
+
+    public void setType(PageTypes type) {
+        this.type = type;
+    }
 
     @Override
     public String toString() {
