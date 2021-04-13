@@ -6,11 +6,12 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
 @Table
-public class Page {
+public class Page implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -54,7 +55,7 @@ public class Page {
         this.name = name;
         this.wizard = wizard;
         this.content = content;
-        this.type=type;
+        this.type = type;
     }
 
     public Long getId() {

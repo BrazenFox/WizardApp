@@ -2,11 +2,12 @@ package com.netcracker.wizardapp.domain;
 
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.netcracker.wizardapp.serializeservice.ToPageSerializer;
+import com.netcracker.wizardapp.serializeservice.PageSerializer;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "toPage")
-public class Button {
+public class Button implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,7 +28,7 @@ public class Button {
     private Page page;
 
     ///////////////@JsonIgnore
-    @JsonSerialize(using = ToPageSerializer.class)
+    @JsonSerialize(using = PageSerializer.class)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "to_page_id", referencedColumnName = "id")

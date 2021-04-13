@@ -1,9 +1,7 @@
 package com.netcracker.wizardapp.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.netcracker.wizardapp.serializeservice.ToPageSerializer;
 import com.netcracker.wizardapp.serializeservice.UserSerializer;
 import com.netcracker.wizardapp.serializeservice.WizardSerializer;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;

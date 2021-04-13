@@ -8,13 +8,13 @@ import com.netcracker.wizardapp.domain.Page;
 
 import java.io.IOException;
 
-public class ToPageSerializer extends StdSerializer<Page> {
+public class PageSerializer extends StdSerializer<Page> {
 
-    public ToPageSerializer() {
+    public PageSerializer() {
         this(null);
     }
 
-    public ToPageSerializer(Class<Page> t) {
+    public PageSerializer(Class<Page> t) {
         super(t);
     }
 

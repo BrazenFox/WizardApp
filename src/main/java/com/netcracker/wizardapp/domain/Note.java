@@ -1,32 +1,35 @@
 package com.netcracker.wizardapp.domain;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.netcracker.wizardapp.serializeservice.ButtonSerializer;
+import com.netcracker.wizardapp.serializeservice.PageSerializer;
+
 import java.io.Serializable;
 
 public class Note implements Serializable{
-    Long pageId;
-    Long buttonId;
+    @JsonSerialize(using = PageSerializer.class)
+    Page page;
+    @JsonSerialize(using = ButtonSerializer.class)
+    Button button;
 
-    public Long getPageId() {
-        return pageId;
+    public Note(Page page, Button button) {
+        this.page = page;
+        this.button = button;
     }
 
-    public void setPageId(Long pageId) {
-        this.pageId = pageId;
+    public Page getPage() {
+        return page;
     }
 
-    public Long getButtonId() {
-        return buttonId;
+    public void setPage(Page page) {
+        this.page = page;
     }
 
-    public void setButtonId(Long buttonId) {
-        this.buttonId = buttonId;
+    public Button getButton() {
+        return button;
     }
 
-    @Override
-    public String toString() {
-        return "Note{" +
-                "pageId=" + pageId +
-                ", buttonId=" + buttonId +
-                '}';
+    public void setButton(Button button) {
+        this.button = button;
     }
 }
