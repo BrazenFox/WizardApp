@@ -53,7 +53,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new AuthTokenFilter();
     }
 
-    @Override
+   /* @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().httpBasic().disable().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
@@ -66,6 +66,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/wizard/**").permitAll()
                 .antMatchers("/result/**").permitAll()
+                .anyRequest().authenticated();
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    }*/
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.cors().and().httpBasic().disable().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .authorizeRequests()
+                .antMatchers("/auth/**").permitAll()
+                .antMatchers("/swagger-resources/**").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
+                .antMatchers("/v2/api-docs").permitAll()
+                .antMatchers("/user/**").hasAuthority(Roles.ADMIN.name())
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);

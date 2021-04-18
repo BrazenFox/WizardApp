@@ -21,5 +21,7 @@ public interface ResultRepo extends JpaRepository<Result, Long> {
     List<Result> findAllByUser(User user);
 
 
+
+
 }
 

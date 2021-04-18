@@ -3,6 +3,7 @@ package com.netcracker.wizardapp.controller;
 import com.netcracker.wizardapp.domain.Role;
 import com.netcracker.wizardapp.domain.Roles;
 import com.netcracker.wizardapp.domain.User;
+import com.netcracker.wizardapp.exceptions.RoleNotFoundException;
 import com.netcracker.wizardapp.payload.request.LoginRequest;
 import com.netcracker.wizardapp.payload.request.RegistrationRequest;
 import com.netcracker.wizardapp.payload.response.JwtResponse;
@@ -11,6 +12,8 @@ import com.netcracker.wizardapp.repository.RoleRepo;
 import com.netcracker.wizardapp.repository.UserRepo;
 import com.netcracker.wizardapp.security.jwt.JwtUtils;
 import com.netcracker.wizardapp.security.services.UserDetailsImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,6 +39,7 @@ public class SecurityController {
 @RestController
 @RequestMapping("/auth")
 public class SecurityController {
+    private static final Logger logger = LogManager.getLogger();
     @Autowired
     AuthenticationManager authenticationManager;
 
@@ -65,7 +69,7 @@ public class SecurityController {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        System.out.println(SecurityContextHolder.getContext());
+        logger.info("User: \"" + SecurityContextHolder.getContext().getAuthentication().getName() + "\" with token: \"" + SecurityContextHolder.getContext().getAuthentication() + "\" is authorized");
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
@@ -74,8 +78,10 @@ public class SecurityController {
     }
 
     @PostMapping("/logout")
-    public void logout(){
+    public void logout() {
+        logger.info("User: \"" + SecurityContextHolder.getContext().getAuthentication().getName() + "\" with token: \"" + SecurityContextHolder.getContext().getAuthentication() + "\" has ended the session");
         SecurityContextHolder.clearContext();
+
     }
 
     @PostMapping("/registration")
@@ -95,26 +101,26 @@ public class SecurityController {
         System.out.println(strRoles);
         if (strRoles == null || strRoles.isEmpty()) {
             Role userRole = roleRepo.findByName(Roles.USER)
-                    .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                    .orElseThrow(() -> new RoleNotFoundException("Error: Role " + Roles.USER + " is not found"));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "ADMIN":
                         Role adminRole = roleRepo.findByName((Roles.ADMIN))
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RoleNotFoundException("Error: Role " + Roles.ADMIN + " is not found"));
                         roles.add(adminRole);
 
                         break;
                     case "MODERATOR":
                         Role modRole = roleRepo.findByName((Roles.MODERATOR))
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RoleNotFoundException("Error: Role " + Roles.MODERATOR + " is not found"));
                         roles.add(modRole);
 
                         break;
                     default:
                         Role userRole = roleRepo.findByName((Roles.USER))
-                                .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+                                .orElseThrow(() -> new RoleNotFoundException("Error: Role " + Roles.USER + " is not found"));
                         roles.add(userRole);
                 }
             });

@@ -14,6 +14,7 @@ public interface WizardRepo extends JpaRepository<Wizard, Long> {
     List<Wizard> findAllByCreator(User user);
     Optional<Wizard> findById(Long id);
     Boolean existsByName(String name);
+    Boolean existsByNameAndIdNot(String name, Long id);
 
 
 }
