@@ -15,6 +15,7 @@ import com.netcracker.wizardapp.security.services.UserDetailsImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -55,8 +56,14 @@ public class SecurityController {
     @Autowired
     JwtUtils jwtUtils;
 
+   /* @Value("${Dspring.profiles.active}")
+    private String myProperty;
+    @Value("${Dspring.profiles.active1}")
+    private String myProperty1;*/
+
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        /*logger.warn(myProperty + " " + myProperty1);*/
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));

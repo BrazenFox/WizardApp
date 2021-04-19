@@ -1,5 +1,5 @@
 package com.netcracker.wizardapp;
-
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class WizardAppStarter {
     public static void main(String[] args) {
         SpringApplication.run(WizardAppStarter.class, args);
-        System.out.println(Arrays.toString(args));
+
 
     }
 
