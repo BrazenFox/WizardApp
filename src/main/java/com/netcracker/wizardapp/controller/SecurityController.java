@@ -56,15 +56,8 @@ public class SecurityController {
     @Autowired
     JwtUtils jwtUtils;
 
-   /* @Value("${Dspring.profiles.active}")
-    private String myProperty;
-    @Value("${Dspring.profiles.active1}")
-    private String myProperty1;*/
-
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        /*logger.warn(myProperty + " " + myProperty1);*/
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 

@@ -28,8 +28,6 @@ public class LoginTest {
 
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private SecurityController securityController;
 
     @Test
     public void loginTestOk() throws Exception {
