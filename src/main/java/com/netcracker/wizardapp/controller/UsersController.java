@@ -127,7 +127,7 @@ public class UsersController {
                     .body(new MessageResponse("Error: Username is already taken!"));
         }
         user.setUsername(registrationRequest.getUsername());
-        user.setPassword(registrationRequest.getPassword());
+        user.setPassword(encoder.encode(registrationRequest.getPassword()));
         Set<String> strRoles = registrationRequest.getRoles();
         Set<Role> roles = new HashSet<>();
 
