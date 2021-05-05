@@ -2,8 +2,6 @@ package com.netcracker.wizardapp.service;
 
 import com.netcracker.wizardapp.domain.Wizard;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 public interface WizardService {
     ResponseEntity<?> createWizard(Wizard wizardView);
